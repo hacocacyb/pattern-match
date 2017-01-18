@@ -7,10 +7,10 @@ import 'bootstrap/dist/css/bootstrap-theme.css';
 class Game extends React.Component {
 	
 	render() {
-		const title = 'Click to continue the pattern';
 		return (
 			<div>
-				<div className="title">{title}</div>
+				<h2 className="title">Pattern Matcher</h2>
+				<h5 className="title">Click to continue the pattern</h5>
 				<Board />
 			</div>
 		);

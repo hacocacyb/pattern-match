@@ -25,12 +25,14 @@ class Board extends React.Component {
 			totalLevels : this.levels.length,
 			locations : locations,
 			step : START_ON_STEP,
-			level : 0,
+			level : 0, //this.levels.length - 1,
 			rightGuesses : 0
 		}
+		this.clicks = {};
 	}
 	
 	componentDidMount() {
+		//do this here so it animates instead of starting at step 3
 		this.nextLevel();
 	}
 	
@@ -66,6 +68,9 @@ class Board extends React.Component {
 		var nextLocation = locations[row][column];
 		var correctGuess = (nextPosition[0] === column && nextPosition[1] === row);
 		var rightGuesses = this.state.rightGuesses;
+		
+		//this.clicks[this.state.totalSteps] = [column, row];
+		//console.log(JSON.stringify(this.clicks));
 		
 
 		if (rightGuesses >= WINNING_GUESSES) {
@@ -153,12 +158,12 @@ class Board extends React.Component {
 			 endLevelText = 'Game Cleared!';
 		}
 		return (
-		  <div className="container">
-			<div className="game container">				
+		  <div className="container-fluid">
+			<div className="game">				
 				{html}
-				<div style={winningDivStyle} className="container level-cleared">
+				<div style={winningDivStyle} className="alert-success level-cleared">
 					{endLevelText}
-					<Button style={nextLevelButtonStyle} 
+					<Button className="btn-success" style={nextLevelButtonStyle} 
 							onClick={this.nextLevel.bind(this)}>Next Level</Button>
 				</div>
 			</div>
@@ -168,17 +173,12 @@ class Board extends React.Component {
 					<div className="field-value" >{this.state.level}</div>
 				</div>
 				<div className="field-row">
-					<label className="field-label">Step:</label>
-					<div className="field-value" >{this.state.step}</div>
-				</div>
-				
-				<div className="field-row">
-					<label className="field-label">Total Steps:</label>
+					<label className="field-label">Total Clicks:</label>
 					<div className="field-value" >{this.state.totalSteps}</div>
 				</div>
 			</fieldset>
 			<div className="nav-bar">
-				<Button onClick={this.startGameOver.bind(this)}>Start Over</Button>
+				<Button className="btn-sm" onClick={this.startGameOver.bind(this)}>Start Over</Button>
 			</div>
 			<div className="footer">
 				<a href="https://github.com/hacocacyb/pattern-match">View source on GitHub</a>
@@ -202,19 +202,19 @@ class Board extends React.Component {
 			this.animatingLevel = true;
 		}
 		var deferredMoves = 0;
+		var animAction = function() {
+			me.setState({
+				step : me.state.step + 1
+			});
+			deferredMoves--;
+			if (deferredMoves === 0) {
+				me.animatingLevel = false;
+			}
+			
+		};
 		while (loopStep < START_ON_STEP) {
 			deferredMoves++;
-			setTimeout(function() {
-				me.setState({
-					step : me.state.step + 1
-				});
-				deferredMoves--;
-				console.log('deferredMoves', deferredMoves);
-				if (deferredMoves === 0) {
-					me.animatingLevel = false;
-				}
-				
-			}, 300 * loopStep);
+			setTimeout(animAction, 300 * loopStep);
 			loopStep++;
 		};
 	}
