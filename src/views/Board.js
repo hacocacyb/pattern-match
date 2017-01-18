@@ -3,11 +3,14 @@ import Square from './Square.js';
 import { Button } from 'react-bootstrap';
 import Levels from '../data/Levels.js';
 
-
+//Constants for now that can be configurable 
+//based on each level in the future.
 const game_height = 6;
 const game_width = 6;
 
 const WINNING_GUESSES = 3;
+const PREVIOUS_STEPS_TO_SHOW = 3;
+const START_ON_STEP = 3;
 
 class Board extends React.Component {
 	
@@ -16,14 +19,19 @@ class Board extends React.Component {
 		super();
 		var locations = this.buildLocations(game_height, game_width);
 		this.levels = Levels;
+		this.animatingLevel = false;
 		this.state = {
 			totalSteps : 0,
 			totalLevels : this.levels.length,
 			locations : locations,
-			step : 1,
-			level : 1,
+			step : START_ON_STEP,
+			level : 0,
 			rightGuesses : 0
 		}
+	}
+	
+	componentDidMount() {
+		this.nextLevel();
 	}
 	
 	buildLocations(game_height, game_width) {
@@ -46,6 +54,9 @@ class Board extends React.Component {
 	}
 	
 	handleClick(row, column) {
+		if (this.animatingLevel) {
+			return;
+		}
 		var pos;
 		var step = this.state.step;
 		var nextStep = step + 1;
@@ -57,7 +68,7 @@ class Board extends React.Component {
 		var rightGuesses = this.state.rightGuesses;
 		
 
-		if (rightGuesses >= 3) {
+		if (rightGuesses >= WINNING_GUESSES) {
 			return;
 		}
 		
@@ -101,18 +112,19 @@ class Board extends React.Component {
 		var level = this.levels[this.state.level - 1];
 
 		var rightGuesses = this.state.rightGuesses;
-		if (!level) {
-			return;
-		}
-		var positionFn = level.fn;
-		var t = Math.max(1, step-3);
+		if (level) {
+			var positionFn = level.fn;
+			var t = Math.max(1, step-PREVIOUS_STEPS_TO_SHOW);
 
-		for (t; t<=step; t++) {
-			var positions = positionFn(t);
-			var x = positions[0];
-			var y = positions[1];
-			var stepLocation = locations[y][x];
-			stepLocation.myStep = t;
+			for (t; t<=step; t++) {
+				var positions = positionFn(t);
+				var x = positions[0];
+				var y = positions[1];
+				var stepLocation = locations[y][x];
+				stepLocation.myStep = t;
+				locations[y][x] = stepLocation;
+			}
+			
 		}
 		
 		var html = [];
@@ -169,7 +181,7 @@ class Board extends React.Component {
 				<Button onClick={this.startGameOver.bind(this)}>Start Over</Button>
 			</div>
 			<div className="footer">
-				<a href="https://github.com/hacocacyb/memory-game">View source on GitHub</a>
+				<a href="https://github.com/hacocacyb/pattern-match">View source on GitHub</a>
 			</div>
 			
 		  </div>
@@ -181,15 +193,37 @@ class Board extends React.Component {
 		this.setState({
 			locations : locations,
 			level : this.state.level + 1,
-			step : 1,
+			step : 1, //START_ON_STEP
 			rightGuesses : 0
 		});
+		var me = this;
+		var loopStep = 1;
+		if (START_ON_STEP > loopStep) {
+			this.animatingLevel = true;
+		}
+		var deferredMoves = 0;
+		while (loopStep < START_ON_STEP) {
+			deferredMoves++;
+			setTimeout(function() {
+				me.setState({
+					step : me.state.step + 1
+				});
+				deferredMoves--;
+				console.log('deferredMoves', deferredMoves);
+				if (deferredMoves === 0) {
+					me.animatingLevel = false;
+				}
+				
+			}, 300 * loopStep);
+			loopStep++;
+		};
 	}
 	
 	renderSquare(props) {
 		var row = props.row;
 		var column = props.column;
 		props.currentStep = this.state.step;
+		props.previousStepsToShow = PREVIOUS_STEPS_TO_SHOW;
 		
 		return <Square 	config={props}
 						key={'' + props.row + props.column} 		
@@ -212,9 +246,10 @@ class Board extends React.Component {
 
 		this.setState({
 			locations : locations,
-			step : 1,
+			step : START_ON_STEP,
 			level : 1,
-			rightGuesses : 0
+			rightGuesses : 0,
+			totalSteps : 0
 		})
 	}
 }

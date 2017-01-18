@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap-theme.css';
 class Game extends React.Component {
 	
 	render() {
-		const title = 'Predict the Pattern';
+		const title = 'Click to continue the pattern';
 		return (
 			<div>
 				<div className="title">{title}</div>

@@ -99,6 +99,11 @@ body {
 	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.4);
 	border: 1px dotted black;
 }
+.shade3 {
+	background-color: #fffff;
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.4);
+	border: 1px dotted black;
+}
 
 .guessed-shade1 {
 	border: 1px dotted black;
