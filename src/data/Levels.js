@@ -48,11 +48,11 @@ const Levels = [{
 				1: [5, 0],
 				2: [5, 5],
 				3: [0, 5]
-			}
-			[f];
+			}[f];
 		}
 	}, {
 		desc: 'four corners, then goes four corners in, etc',
+		previousToShow : 4,
 		fn: function (t) {
 			var f = (t - 1) % 12;
 			return {
@@ -68,11 +68,11 @@ const Levels = [{
 				9: [3, 2],
 				10: [3, 3],
 				11: [2, 3]
-			}
-			[f];
+			}[f];
 		}
 	}, {
 		desc: 'three blocks from each corner',
+		previousToShow : 4,
 		fn: function (t) {
 			var f = (t - 1) % 12;
 			return {
@@ -88,11 +88,11 @@ const Levels = [{
 				"9": [0, 5],
 				"10": [0, 4],
 				"11": [0, 3]
-			}
-			[f];
+			}[f];
 		}
 	}, {
 		desc: 'up up up right',
+		previousToShow : 5,
 		fn: function (t) {
 			return {
 				"0": [0, 5],
@@ -116,7 +116,14 @@ const Levels = [{
 			}[(t - 1) % 18];
 		}
 	}, {
+		desc : '?',
+		previousToShow : 4,
+		fn : function(t) {
+			return {"0":[0,5],"1":[1,0],"2":[5,2],"3":[2,5],"4":[0,1],"5":[5,0],"6":[4,5],"7":[0,3],"8":[3,0],"9":[5,4]}[(t - 1) % 10];
+		}
+	}, {
 		desc: '',
+		previousToShow : 4,
 		fn: function (t) {
 			return {
 				"0": [0, 5],
@@ -134,7 +141,111 @@ const Levels = [{
 			}[(t - 1) % 12];
 		}
 	}, {
+		desc: 'stalagtites and stalagmites',
+		previousToShow: 5,
+		fn: function (t) { 
+		return {
+				"0": [
+					0,
+					0
+				],
+				"1": [
+					0,
+					5
+				],
+				"2": [
+					0,
+					1
+				],
+				"3": [
+					0,
+					4
+				],
+				"4": [
+					1,
+					0
+				],
+				"5": [
+					1,
+					5
+				],
+				"6": [
+					1,
+					1
+				],
+				"7": [
+					1,
+					4
+				],
+				"8": [
+					2,
+					0
+				],
+				"9": [
+					2,
+					5
+				],
+				"10": [
+					2,
+					1
+				],
+				"11": [
+					2,
+					4
+				],
+				"12": [
+					3,
+					0
+				],
+				"13": [
+					3,
+					5
+				],
+				"14": [
+					3,
+					1
+				],
+				"15": [
+					3,
+					4
+				],
+				"16": [
+					4,
+					0
+				],
+				"17": [
+					4,
+					5
+				],
+				"18": [
+					4,
+					1
+				],
+				"19": [
+					4,
+					4
+				],
+				"20": [
+					5,
+					0
+				],
+				"21": [
+					5,
+					5
+				],
+				"22": [
+					5,
+					1
+				],
+				"23": [
+					5,
+					4
+				]
+			}[(t - 1) % 24];
+		}
+	}, {
 		desc: '',
+		previousToShow : 4,
 		fn: function (t) {
 			return {
 				"0": [5, 5],
@@ -151,7 +262,6 @@ const Levels = [{
 				"11": [5, 0]
 			}[(t - 1) % 12];
 		}
-	}
-];
 
+	}];
 export default Levels;

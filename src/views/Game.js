@@ -10,7 +10,7 @@ class Game extends React.Component {
 		return (
 			<div>
 				<h2 className="title">Pattern Matcher</h2>
-				<h5 className="title">Click to continue the pattern</h5>
+				<h5 className="title">Click to guess the next spot in the pattern</h5>
 				<Board />
 			</div>
 		);

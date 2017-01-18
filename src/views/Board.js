@@ -23,9 +23,10 @@ class Board extends React.Component {
 		this.state = {
 			totalSteps : 0,
 			totalLevels : this.levels.length,
+			previousToShow : PREVIOUS_STEPS_TO_SHOW,
 			locations : locations,
 			step : START_ON_STEP,
-			level : 0, //this.levels.length - 1,
+			level : 0, //this.levels.length - 4,
 			rightGuesses : 0
 		}
 		this.clicks = {};
@@ -114,12 +115,13 @@ class Board extends React.Component {
 		var endLevelText = 'Level Cleared!';
 		var locations = this.state.locations;
 		var step = this.state.step;
+		var previousToShow = this.state.previousToShow;
 		var level = this.levels[this.state.level - 1];
 
 		var rightGuesses = this.state.rightGuesses;
 		if (level) {
 			var positionFn = level.fn;
-			var t = Math.max(1, step-PREVIOUS_STEPS_TO_SHOW);
+			var t = Math.max(1, step-previousToShow);
 
 			for (t; t<=step; t++) {
 				var positions = positionFn(t);
@@ -168,11 +170,11 @@ class Board extends React.Component {
 				</div>
 			</div>
 			<fieldset>
-				<div className="field-row">
+				<div className="row">
 					<label className="field-label">Level:</label>
-					<div className="field-value" >{this.state.level}</div>
+					<div className="field-value" >{this.state.level}/{this.state.totalLevels}</div>
 				</div>
-				<div className="field-row">
+				<div className="row">
 					<label className="field-label">Total Clicks:</label>
 					<div className="field-value" >{this.state.totalSteps}</div>
 				</div>
@@ -190,15 +192,24 @@ class Board extends React.Component {
 
 	nextLevel() {
 		var locations = this.buildLocations(game_height, game_width);
+		var levelNumber = this.state.level;
+		levelNumber += 1;
+		var levelConfig = this.levels[levelNumber - 1];
+
 		this.setState({
 			locations : locations,
-			level : this.state.level + 1,
+			previousToShow : levelConfig.previousToShow || PREVIOUS_STEPS_TO_SHOW,
+			level : levelNumber,
 			step : 1, //START_ON_STEP
 			rightGuesses : 0
 		});
 		var me = this;
 		var loopStep = 1;
-		if (START_ON_STEP > loopStep) {
+		var levelStartOnStep = START_ON_STEP || levelConfig.startOnStep;
+		if (levelNumber > 5) {
+			levelStartOnStep = 4;
+		}
+		if (levelStartOnStep > loopStep) {
 			this.animatingLevel = true;
 		}
 		var deferredMoves = 0;
@@ -212,7 +223,7 @@ class Board extends React.Component {
 			}
 			
 		};
-		while (loopStep < START_ON_STEP) {
+		while (loopStep < levelStartOnStep) {
 			deferredMoves++;
 			setTimeout(animAction, 300 * loopStep);
 			loopStep++;
@@ -223,7 +234,7 @@ class Board extends React.Component {
 		var row = props.row;
 		var column = props.column;
 		props.currentStep = this.state.step;
-		props.previousStepsToShow = PREVIOUS_STEPS_TO_SHOW;
+		props.previousStepsToShow = this.state.previousToShow;
 		
 		return <Square 	config={props}
 						key={'' + props.row + props.column} 		
