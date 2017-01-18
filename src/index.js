@@ -1,21 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Board from './Board.js';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
+import Game from './views/Game.js';
 
 import './App.css';
 
 
 
-class Game extends React.Component {
-  render() {
-    return (
-		<Board />
-    );
-  }
-}
 
 // ========================================
 
