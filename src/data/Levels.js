@@ -116,7 +116,7 @@ const Levels = [{
 			}[(t - 1) % 18];
 		}
 	}, {
-		desc : '?',
+		desc : '1st on a side, then 2nd on another side, then 3 etc',
 		previousToShow : 4,
 		fn : function(t) {
 			return {"0":[0,5],"1":[1,0],"2":[5,2],"3":[2,5],"4":[0,1],"5":[5,0],"6":[4,5],"7":[0,3],"8":[3,0],"9":[5,4]}[(t - 1) % 10];

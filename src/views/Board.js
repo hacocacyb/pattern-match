@@ -70,8 +70,8 @@ class Board extends React.Component {
 		var correctGuess = (nextPosition[0] === column && nextPosition[1] === row);
 		var rightGuesses = this.state.rightGuesses;
 		
-		//this.clicks[this.state.totalSteps] = [column, row];
-		//console.log(JSON.stringify(this.clicks));
+		this.clicks[this.state.totalSteps] = [column, row];
+		console.log(JSON.stringify(this.clicks));
 		
 
 		if (rightGuesses >= WINNING_GUESSES) {
@@ -169,16 +169,13 @@ class Board extends React.Component {
 							onClick={this.nextLevel.bind(this)}>Next Level</Button>
 				</div>
 			</div>
-			<fieldset>
-				<div className="row">
-					<label className="field-label">Level:</label>
-					<div className="field-value" >{this.state.level}/{this.state.totalLevels}</div>
-				</div>
-				<div className="row">
-					<label className="field-label">Total Clicks:</label>
-					<div className="field-value" >{this.state.totalSteps}</div>
-				</div>
-			</fieldset>
+
+			<div className="form-group text-center">
+				<label className="control-label">Level:</label>
+				<div className="form-display" style={{marginRight:'8px'}}>{this.state.level}/{this.state.totalLevels}</div>
+				<label className="control-label">Total Clicks:</label>
+				<div className="form-display" >{this.state.totalSteps}</div>
+			</div>
 			<div className="nav-bar">
 				<Button className="btn-sm" onClick={this.startGameOver.bind(this)}>Start Over</Button>
 			</div>
@@ -192,6 +189,7 @@ class Board extends React.Component {
 
 	nextLevel() {
 		var locations = this.buildLocations(game_height, game_width);
+		
 		var levelNumber = this.state.level;
 		levelNumber += 1;
 		var levelConfig = this.levels[levelNumber - 1];
@@ -258,10 +256,10 @@ class Board extends React.Component {
 		this.setState({
 			locations : locations,
 			step : START_ON_STEP,
-			level : 1,
+			level : 0,
 			rightGuesses : 0,
 			totalSteps : 0
-		})
+		}, this.nextLevel.bind(this));
 	}
 }
 
